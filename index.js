@@ -65,59 +65,54 @@ function pruebaAleatoriedad() {
         return;
     }
     //Genera el arreglo binario
-    let arreglo2 = []
+    let arregloBinario = []
     for (let number of arreglo) {
         if (number >= 0.5) {
-            arreglo2.push(1);
+            arregloBinario.push(1);
         } else {
-            arreglo2.push(0);
+            arregloBinario.push(0);
         }
     }
-    console.log("Arreglo binario:", arreglo2);
-    //Prueba de longitud de corrida 1
-    let longCorrida1 = 0
-    for (let i = 0; i < arreglo2.length; i++) {
-        if (i == 0)
-            if (arreglo2[i] != arreglo2[i + 1]) {
-                longCorrida1++;
-                arreglo2[i] = null;
-            }
-        if (i < arreglo2.length - 2)
-            if ((arreglo2[i] != arreglo2[i + 1]) && (arreglo2[i] != arreglo2[i - 1])) {
-                longCorrida1++;
-                arreglo2[i] = null;
-            }
-        if (i == arreglo2.length - 1) {
-            if (arreglo2[i] != arreglo2[i - 1]) {
-                longCorrida1++;
-                arreglo2[i] = null;
-            }
+    console.log("Arreglo binario:", arregloBinario);
+    
+    let valor = arregloBinario[0];
+    let FOcorridas = [0,0,0,0,0];
+    let arregloCorrida = [];
+    for (let i = 0; i < arregloBinario.length; i++) {
+        if (arregloBinario[i] == valor) {
+            arregloCorrida.push(valor);
+        } else {
+            FOcorridas[arregloCorrida.length - 1]++;
+            valor = arregloBinario[i];
+            arregloCorrida = [];
+            arregloCorrida.push(valor);
+        }
+        if (i == arregloBinario.length - 1) {
+            FOcorridas[arregloCorrida.length - 1]++;
+            arregloCorrida = [];
         }
     }
-    console.log("Longitud de corrida 1:", longCorrida1);
-    console.log("Arreglo binario:", arreglo2);
-    //Prueba de longitud de corrida 2
-    let longCorrida2 = 0
-    for (let i = 0; i < arreglo2.length - 1; i++) {
-        if (arreglo2[i] === null) continue;
-        if (i == 0){
-            if ((arreglo2[i] == arreglo2[i + 1]) && (arreglo2[i] != arreglo2[i + 2])) {
-                longCorrida2++;
-                arreglo2[i] = null;
-                arreglo2[i + 1] = null;
-                continue;
-            }
-        }
-        else if ((arreglo2[i] == arreglo2[i + 1]) && (arreglo2[i] != arreglo2[i + 2]) && (arreglo2[i] != arreglo2[i - 1])) {
-            console.log("entro al if");
-            longCorrida2++;
-            arreglo2[i] = null;
-            arreglo2[i + 1] = null;
-        }
+    console.log("Arreglo de corridas:", FOcorridas);
+    let FEcorridas = [0,0,0,0,0];
+    for (let i = 0; i < 5; i++) {
+        FEcorridas[i] = (arreglo.length - (i + 1) + 3) / (2**(i + 2));
     }
-    console.log("Arreglo binario:", arreglo2);
-    console.log("Longitud de corrida 2:", longCorrida2);
-    //let sumatoria = 0;
+    console.log("Arreglo de frecuencias esperadas:", FEcorridas);
+
+    let sumatoria = 0;
+    for (let j = 0; j < 5; j++) {
+        let calculo = (FEcorridas[j] - FOcorridas[j]) ** 2 / FEcorridas[j];
+        sumatoria += calculo;
+    }
+    console.log("Arreglo de frecuencias observadas:", FOcorridas);
+    
+    console.log("Sumatoria:", sumatoria);
+    let chiCuadrada = 3.8; 
+    if (sumatoria < chiCuadrada) {
+        console.log("Se acepta la hipotesis nula, los numeros son aleatorios");
+    } else {
+        console.log("Se rechaza la hipotesis nula, los numeros no son aleatorios");
+    }
 }
 
 function pruebaIndependencia() {
